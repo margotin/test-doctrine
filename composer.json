@@ -55,6 +55,20 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "drop": [
+            "php bin/console doctrine:database:drop --force"
+        ],
+        "prepare-dev-drop": [
+            "@drop",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:update --force",
+            "php bin/console doctrine:fixtures:load -n"
+        ],
+        "prepare-dev": [
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:update --force",
+            "php bin/console doctrine:fixtures:load -n"
         ]
     },
     "conflict": {
