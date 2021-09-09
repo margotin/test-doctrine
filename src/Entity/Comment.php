@@ -27,14 +27,9 @@ class Comment
     private string $content;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="comments")
+     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments")
      */
-    private Collection $articles;
-
-    public function __construct()
-    {
-        $this->articles = new ArrayCollection();
-    }
+    private Article $article;
 
     public function getId(): ?int
     {
@@ -53,30 +48,16 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticles(): Collection
+    public function getArticle(): ?Article
     {
-        return $this->articles;
+        return $this->article;
     }
 
-    public function addArticle(Article $article): self
+    public function setArticle(?Article $article): self
     {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->addComment($this);
-        }
+        $this->article = $article;
 
         return $this;
     }
 
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->removeElement($article)) {
-            $article->removeComment($this);
-        }
-
-        return $this;
-    }
 }

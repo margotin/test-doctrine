@@ -1,15 +1,17 @@
 # Doctrine Relations  
 
-We have four tables:
+We have five tables:
 - User
 - Address
 - Article
 - Comment
+- Category
 
 *"Management rules"* :  
 - Each User has exactly one Address. (Each Address has exactly one User)
 - Each User can have many Article. (Each Article has one User)
-- Each Article can have many Comment. (Each Comment can have many Article)
+- Each Article can have many Comment. (Each Comment has one Article)
+- Each Article can have many Category. (Each Category can have many Article)
 
 ### Relations
 1. **OneToOne**  
@@ -50,43 +52,41 @@ class Address
 ````
 
 2. ManyToOne  
-*Each User can have many Article. (Each Article has one User)* 
+*Each Article can have many Comment. (Each Comment has one Article)* 
 
-> ***Article class is the owner of the relation***
+> ***Comment class is the owner of the relation***
 
 **Unidirectional**
 ````
-class Article
+class Comment
 {
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Article::class)
      */
-    private User $user;
+    private Article $article;
 }
 ````
 **Bidirectional**
 ````
-class Article
+class Comment
 {
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments")
      */
-    private User $user;
+    private Article $article;
 }
 ````
 ````
-class User
+class Article
 {
-    /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user")
+   /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="articles")
      */
-    private Collection $articles;
+    private Collection $comments;
 
     public function __construct()
     {
-        $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 }
 ````
@@ -101,13 +101,13 @@ class User
 class Article
 {
     /**
-     * @ORM\ManyToMany(targetEntity=Comment::class)
+     * @ORM\ManyToMany(targetEntity=Category::class)
      */
-    private Collection $comments;
+    private Collection $categories;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 }
 ````
@@ -117,21 +117,21 @@ class Article
 class Article
 {
     /**
-     * @ORM\ManyToMany(targetEntity=Comment::class, inversedBy="articles")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="articles")
      */
-    private Collection $comments;
+    private Collection $categories;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 }
 ````
 ````
-class Comment
+class Category
 {
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="comments")
+     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories")
      */
     private Collection $articles;
 
@@ -162,16 +162,16 @@ The request to retrieve comments is only made when they are wanted.
 ### About ``@ORM\OrderBy``
 
  ````
-class User
+class Comment
 {
     /**
-    * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user")
+    * @ORM\ManyToOne(targetEntity=Article::class, mappedBy="user")
     * @ORM\OrderBy({"createdAt" = "DESC"})
     */
     private Collection $articles;    
 }
 ````
-When ``$user->getArticles()`` is called, the result will be ordered by ``createdAt``
+When ``$comment->getArticles()`` is called, the result will be ordered by ``createdAt``
 
 ### About ``Fetch EXTRA_LAZY`` 
 
@@ -179,7 +179,7 @@ When ``$user->getArticles()`` is called, the result will be ordered by ``created
 class Article
 {
     /**
-     * @ORM\ManyToMany(targetEntity=Comment::class, inversedBy="articles", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=Comment::class, inversedBy="articles", fetch="EXTRA_LAZY")
      */
     private Collection $comments;
 }

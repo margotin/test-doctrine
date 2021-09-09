@@ -43,14 +43,21 @@ class Article
     private User $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Comment::class, inversedBy="articles", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article" , fetch="EXTRA_LAZY")
      */
     private Collection $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="articles")
+     */
+    private Collection $categories;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -117,6 +124,7 @@ class Article
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
+            $comment->setArticle($this);
         }
 
         return $this;
@@ -124,8 +132,38 @@ class Article
 
     public function removeComment(Comment $comment): self
     {
-        $this->comments->removeElement($comment);
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
+            }
+        }
 
         return $this;
     }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
 }
