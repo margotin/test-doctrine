@@ -20,7 +20,7 @@ We have five tables:
 > ***User class is the owner of the relation***
 
 **Unidirectional**  
-````
+````php
 class User
 {
     /**
@@ -31,7 +31,7 @@ class User
 }
 ````
 **Bidirectional**
-````
+````php
 class User
 {
     /**
@@ -41,7 +41,7 @@ class User
     private Address $address;
 }
 ````
-````
+````php
 class Address
 {
     /**
@@ -57,7 +57,7 @@ class Address
 > ***Comment class is the owner of the relation***
 
 **Unidirectional**
-````
+````php
 class Comment
 {
     /**
@@ -67,7 +67,7 @@ class Comment
 }
 ````
 **Bidirectional**
-````
+````php
 class Comment
 {
     /**
@@ -76,7 +76,7 @@ class Comment
     private Article $article;
 }
 ````
-````
+````php
 class Article
 {
    /**
@@ -97,7 +97,7 @@ class Article
 > ***Article class is the owner of the relation***
 
 **Unidirectional**
-````
+````php
 class Article
 {
     /**
@@ -113,7 +113,7 @@ class Article
 ````
 
 **Bidirectional**
-````
+````php
 class Article
 {
     /**
@@ -127,7 +127,7 @@ class Article
     }
 }
 ````
-````
+````php
 class Category
 {
     /**
@@ -161,7 +161,7 @@ The request to retrieve comments is only made when they are wanted.
 
 ### About ``@ORM\OrderBy``
 
- ````
+ ````php
 class Comment
 {
     /**
@@ -175,7 +175,7 @@ When ``$comment->getArticles()`` is called, the result will be ordered by ``crea
 
 ### About ``Fetch EXTRA_LAZY`` 
 
-````
+````php
 class Article
 {
     /**
