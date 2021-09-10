@@ -51,7 +51,7 @@ class Article
 ````php
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function findAllPublishedOrderedByNewest()
+    public function findAllNonDeletedComments()
     {
         $this->createQueryBuilder('a')
             ->addCriteria(self::createNonDeletedCriteria())
