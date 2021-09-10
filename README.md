@@ -3,7 +3,7 @@
 
 We have two classes :  
 - Person
-````
+````php
 class Person
 {
     private int $id;
@@ -13,7 +13,7 @@ class Person
 ````
 
 - Student 
-````
+````php
 class Student
 {
     private int $id;
@@ -22,7 +22,7 @@ class Student
 ````
 
 The Person class will be the parent class
-````
+````php
 /**
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @DiscriminatorColumn(name="type", type="string")
@@ -35,7 +35,7 @@ class Person
     private int $age;
 }
 ````
-````
+````php
 class Student extends Person
 {
     private int $id;
