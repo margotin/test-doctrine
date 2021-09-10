@@ -11,7 +11,10 @@
         {% for article in articles %}
             <h1>{{ article.name }}</h1>
         <p>{{ article.content }}</p>
-        <h3>{{ article.comments|length }} Comments</h3>
+        <h3>{{ article.nonDeletedComments|length }} Comments</h3>
+            {% for comment in article.nonDeletedComments %}
+                <p> {{ comment.content }}</p>
+            {% endfor %}
         {% endfor %}
 
     </body>

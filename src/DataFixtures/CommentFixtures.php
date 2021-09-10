@@ -13,7 +13,9 @@ class CommentFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         for ($i = 0; $i < 100; $i++) {
-            $comment = (new Comment())->setContent("comment-$i");
+            $comment = (new Comment())
+                ->setIsDeleted($i % 3 === 0)
+                ->setContent("comment-$i");
             $manager->persist($comment);
             $this->setReference("comment-$i", $comment);
         }
